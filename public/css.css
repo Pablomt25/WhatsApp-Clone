@@ -1,0 +1,170 @@
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+h1 {
+  color: #075e54;
+  text-align: center;
+}
+
+#auth-container {
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 400px;
+  width: 100%;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#propio {
+  background-color: white;
+  color: black;
+}
+
+#emoticono {
+  background-color: #f2f2f2;
+}
+
+#emoticonos-container {
+  display: flex;
+}
+
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+#auth-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+input,
+select {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+#avatar-options {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+#avatar-options label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+#avatar-options img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 5px;
+  border-radius: 50%;
+}
+
+button {
+  background-color: #25d366;
+  color: #fff;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: calc(100% - 20px);
+}
+
+button:hover {
+  background-color: #128C7E;
+}
+
+
+
+
+#auth-container,
+#chat-container,
+.private-chat-container,
+#file-upload-container {
+  display: none;
+}
+
+#chat-container {
+  max-width: 800px;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#user-list {
+  float: left;
+  width: 20%;
+  padding: 10px, 30px;
+  border-right: 1px solid #ccc;
+  height: 400px;
+  overflow-y: auto;
+}
+
+#chat,
+#file-upload-container {
+  float: left;
+  width: 60%;
+  padding: 10px;
+  height: 400px;
+  overflow-y: auto;
+}
+
+.mensaje {
+  margin-bottom: 10px;
+}
+
+.mensaje-usuario {
+  color: green;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.mensaje-otros {
+  color: red;
+  text-align: left;
+  margin-left: 10px;
+}
+
+.private-chat-container {
+  float: left;
+  width: 60%;
+  padding: 10px;
+  height: 400px;
+  overflow-y: auto;
+  display: none;
+}
+
+.private-chat-header {
+  background-color: #ddd;
+  padding: 5px;
+  text-align: center;
+}

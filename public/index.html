@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <title>WhatsApp Clone</title>
+  <link rel="stylesheet" href="./css.css">
+
+  <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+  <script src="./index.js"></script>
+</head>
+
+<body>
+  <h1>WhatsApp Clone</h1>
+  <div id="auth-container">
+    <form id="auth-form" onsubmit="return autenticarUsuario();">
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" required>
+      <label for="estado">Estado:</label>
+      <select id="estado">
+        <option value="1">Feliz</option>
+        <option value="2">Ocupado</option>
+        <option value="3">Solo mensajes importantes</option>
+      </select>
+      <label for="avatar">Avatar:</label>
+      <div id="avatar-options">
+        <label>
+          <img src="./images/avatar1.png" alt="" width="40px">
+          <input type="radio" name="avatar" value="1">
+        </label>
+        <label>
+          <img src="./images/avatar2.png" alt="" width="40px">
+          <input type="radio" name="avatar" value="2">
+        </label>
+        <label>
+          <img src="./images/avatar3.png" alt="" width="40px">
+          <input type="radio" name="avatar" value="3">
+        </label>
+        <label>
+          <img src="./images/avatar4.png" alt="" width="40px">
+          <input type="radio" name="avatar" value="4">
+        </label>
+      </div>
+      <input type="file" id="custom-avatar-input" accept="image/*" style="display: none;">
+      <button id="propio" type="button" onclick="cargarImagenPropia()">Seleccionar Avatar propio</button>
+
+      <button type="submit">Ingresar</button>
+    </form>
+  </div>
+
+
+  <div id="chat-container" style="display: none;">
+    <div id="user-list" onclick="iniciarConversacionPrivada(event)"></div>
+    <div id="chat"></div>
+    <div class="private-chat-container" id="private-chat-container">
+      <div class="private-chat-header">Chat Privado</div>
+      <p>Conversación con <span id="private-recipient"></span></p>
+      <div id="private-chat"></div>
+      <input type="text" id="private-cajaTexto" placeholder="Escribe tu mensaje...">
+      <button onclick="enviarPrivado()">Enviar</button>
+      <button onclick="volverAChatGeneral()">Volver al Chat General</button>
+    </div>
+    <div id="file-upload-container">
+      <h2>Subir Archivos</h2>
+      <input type="file" id="archivoInput" accept="image/*">
+      <button onclick="subirArchivo()">Subir</button>
+      <button onclick="iniciarConversacionPrivada()">Iniciar Conversación Privada</button>
+    </div>
+    <div>
+      <input type="text" id="cajaTexto" placeholder="Escribe tu mensaje...">
+      <div id="emoticonos-container">
+        <button id="emoticono" onclick="emoticono1()"><img src="./images/emoticono1.jpeg" alt="" width="20px"></button>
+        <button id="emoticono" onclick="emoticono2()"><img src="./images/emoticono2.jpeg" alt="" width="20px"></button>
+      </div>
+      <button onclick="enviar()">Enviar</button>
+    </div>
+  </div>
+  <script>
+    window.onload = mostrarFormularioRegistro;
+  </script>
+</body>
+
+</html>

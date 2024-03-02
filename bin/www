@@ -1,0 +1,122 @@
+const { Server } = require('socket.io');
+const app = require('../app');
+const debug = require('debug')('proyectonode:server');
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const express = require('express');
+const multer = require('multer');
+
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+const server = http.createServer(app);
+const io = new Server(server);
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, 'images'));
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
+let users = [];
+
+app.post('/guardar-avatar', upload.single('avatar'), (req, res) => {
+  const avatarPath = `/images/${req.file.filename}`;
+  res.json({ success: true, avatarPath });
+});
+
+io.on('connection', (socket) => {
+  socket.on('authenticate', (data) => {
+    const { nombre, estado, avatarId } = data;
+
+    if (!users.some((user) => user.nombre === nombre)) {
+      const user = { id: socket.id, nombre, estado, avatarId };
+      users.push(user);
+
+      io.emit('entradaUsuario', getUsuariosConectadosHTML());
+
+      io.emit('mensaje', {
+        tipo: 'info',
+        contenido: `${nombre} se ha unido al chat.`,
+      });
+
+      socket.emit('autenticacionExitosa', { user, users });
+    } else {
+      socket.emit('errorAutenticacion', 'El nombre de usuario ya está en uso');
+    }
+  });
+
+  socket.on('disconnect', () => {
+    const userDisconnected = users.find((user) => user.id === socket.id);
+    if (userDisconnected) {
+      users.splice(users.indexOf(userDisconnected), 1);
+      io.emit('entradaUsuario', getUsuariosConectadosHTML());
+
+      io.emit('mensaje', {
+        tipo: 'info',
+        contenido: `${userDisconnected.nombre} ha salido del chat.`,
+      });
+    }
+  });
+
+  socket.on('chat message', (msg) => {
+    if (msg.tipo === 'archivo') {
+      io.emit('mensaje', { ...msg, remitente: users.find((user) => user.id === socket.id).nombre });
+    } else {
+      socket.broadcast.emit('mensaje', msg);
+    }
+  });
+
+  socket.on('private message', (msg) => {
+    const userSocket = users.find((user) => user.nombre === msg.destinatario);
+    if (userSocket) {
+      const salaPrivada = `sala:${socket.id}-${userSocket.id}`;
+      io.to(salaPrivada).emit('private message', msg);
+    }
+  });
+});
+
+function getUsuariosConectadosHTML() {
+  let html = '<h2>Usuarios Conectados</h2><ul style="list-style: none; padding: 0;">';
+  users.forEach((user) => {
+    let avatarHTML;
+
+    if (user.avatarId === 'custom') {
+      avatarHTML = `<img src="${user.avatar}" alt="" width="40px" style="border-radius: 50%; margin-right: 5px;">`;
+    } else {
+      avatarHTML = `<img src="./images/avatar${user.avatarId}.png" alt="" width="40px" style="border-radius: 50%; margin-right: 5px;">`;
+    }
+
+    html += `
+      <li>
+        ${avatarHTML}
+        ${user.nombre}
+      </li>`;
+  });
+  html += '</ul>';
+  return html;
+}
+
+server.listen(port, () => {
+  console.log('Servidor escuchando en el puerto 3000');
+});
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    return val;
+  }
+
+  if (port >= 0) {
+    return port;
+  }
+
+  return false;
+}
